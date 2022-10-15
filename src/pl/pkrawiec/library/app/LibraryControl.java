@@ -1,8 +1,12 @@
 package pl.pkrawiec.library.app;
 
+import pl.pkrawiec.library.exception.DataExportException;
+import pl.pkrawiec.library.exception.DataImportException;
 import pl.pkrawiec.library.exception.NoSuchOptionException;
 import pl.pkrawiec.library.io.ConsolePrinter;
 import pl.pkrawiec.library.io.DataReader;
+import pl.pkrawiec.library.io.file.FileManager;
+import pl.pkrawiec.library.io.file.FileManagerBuilder;
 import pl.pkrawiec.library.model.Book;
 import pl.pkrawiec.library.model.Library;
 import pl.pkrawiec.library.model.Magazine;
@@ -14,9 +18,22 @@ public class LibraryControl {
 
     private ConsolePrinter printer = new ConsolePrinter();
     private DataReader dataReader = new DataReader(printer);
-    private Library library = new Library();
+    private FileManager fileManager;
+    private Library library;
 
-    public void controlLoop() {
+    LibraryControl() {
+        fileManager = new FileManagerBuilder(printer, dataReader).build();
+        try {
+            library = fileManager.importData();
+            printer.printLine("Zaimportowano dane z pliku");
+        } catch (DataImportException e){
+            printer.printLine(e.getMessage());
+            printer.printLine("Zainicjowano nową bazę.");
+            library = new Library();
+        }
+    }
+
+    void controlLoop() {
         Option option;
 
         do {
@@ -77,6 +94,12 @@ public class LibraryControl {
     }
 
     private void exit() {
+        try {
+            fileManager.exportData(library);
+            printer.printLine("Export danych do pliku zakończony powodzeniem.");
+        } catch (DataExportException e) {
+            printer.printLine(e.getMessage());
+        }
         printer.printLine("Koniec programu!");
         dataReader.close();
     }

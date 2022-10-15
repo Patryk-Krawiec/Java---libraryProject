@@ -13,7 +13,7 @@ public class DataReader {
         this.printer = printer;
     }
 
-    public Book readAndCreateBook(){
+    public Book readAndCreateBook() {
         printer.printLine("Tytuł: ");
         String title = sc.nextLine();
         printer.printLine("Autor: ");
@@ -49,7 +49,7 @@ public class DataReader {
         return new Magazine(title, publisher, language, year, month, day);
     }
 
-    public int getInt(){
+    public int getInt() {
         try {
             return sc.nextInt();
         } finally {
@@ -57,7 +57,11 @@ public class DataReader {
         }
     }
 
-    public void close(){
+    public String getString() {
+        return sc.nextLine();
+    }
+
+    public void close() {
         sc.close();
     }
 }
