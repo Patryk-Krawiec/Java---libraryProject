@@ -2,6 +2,7 @@ package pl.pkrawiec.library.app;
 
 import pl.pkrawiec.library.exception.DataExportException;
 import pl.pkrawiec.library.exception.DataImportException;
+import pl.pkrawiec.library.exception.InvalidDataException;
 import pl.pkrawiec.library.exception.NoSuchOptionException;
 import pl.pkrawiec.library.io.ConsolePrinter;
 import pl.pkrawiec.library.io.DataReader;
@@ -26,7 +27,7 @@ public class LibraryControl {
         try {
             library = fileManager.importData();
             printer.printLine("Zaimportowano dane z pliku");
-        } catch (DataImportException e){
+        } catch (DataImportException | InvalidDataException e) {
             printer.printLine(e.getMessage());
             printer.printLine("Zainicjowano nową bazę.");
             library = new Library();
